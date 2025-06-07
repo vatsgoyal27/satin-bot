@@ -6,7 +6,7 @@ import hand_utils as hu
 import time
 
 #Change 'COM3' to match your Arduino's port
-#arduino = serial.Serial(port='COM3', baudrate=9600, timeout=1)
+arduino = serial.Serial(port='COM3', baudrate=9600, timeout=1)
 time.sleep(2)  # Let Arduino reset
 
 pTime = 0
@@ -49,7 +49,7 @@ while True:
         data = str(xprev) + ',' + str(yprev) + '\n'
         print("hand:", hindex, f" landmark: {lindex}, at: ({xprev}, {yprev})")
 
-    #arduino.write(data.encode())  # Convert string to bytes
+    arduino.write(data.encode())  # Convert string to bytes
     print("Sent")
     time.sleep(0.2)  # Optional: slow down for testing
 
