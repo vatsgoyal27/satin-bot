@@ -1,29 +1,38 @@
 #include <SPI.h>
+#include <nRF24L01.h>
 #include <RF24.h>
 
-RF24 radio(9, 10); // CE = pin 9, CSN = pin 10 — adjust if needed
-const byte address[6] = "00001";  // Must match the transmitter
+RF24 radio(9, 10);  // CE, CSN
+const byte address[6] = "00001";
 
 void setup() {
   Serial.begin(9600);
-  radio.begin();
 
-  radio.openReadingPipe(0, address);  // Open pipe 0 with the same address
-  radio.setPALevel(RF24_PA_LOW);      // Adjust power level based on range needs
-  radio.setDataRate(RF24_250KBPS);    // Optional: More reliable at long distances
-  radio.startListening();             // Set module as receiver
+  if (!radio.begin()) {
+    Serial.println("nRF24 not responding");
+    while (1);
+  }
+
+  radio.setPALevel(RF24_PA_LOW);
+  radio.setChannel(100);
+  radio.openReadingPipe(0, address);
+  radio.startListening();
+
+  Serial.println("Receiver ready");
 }
 
 void loop() {
   if (radio.available()) {
-    int data[2];  // To store received x, y values
+    int x;
+    radio.read(&x, sizeof(x));
 
-    radio.read(&data, sizeof(data));  // Read full data packet
+    Serial.print("Received x: ");
+    Serial.println(x);
 
-    // Print received values to Serial Monitor
-    Serial.print("Received X and Y: ");
-    Serial.print(data[0]);
-    Serial.print(" ");
-    Serial.println(data[1]);
+    if (x > 320) {
+      //do something
+    } else {
+      //do something else
+    }
   }
 }

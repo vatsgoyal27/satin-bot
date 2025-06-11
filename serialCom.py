@@ -6,7 +6,7 @@ import hand_utils as hu
 import time
 
 #Change 'COM3' to match your Arduino's port
-arduino = serial.Serial(port='COM3', baudrate=9600, timeout=1)
+arduino = serial.Serial(port='COM12', baudrate=9600, timeout=1)
 time.sleep(2)  # Let Arduino reset
 
 pTime = 0
@@ -14,7 +14,7 @@ pTime = 0
 frameHeight = 480
 frameWidth = 640
 fr = cv2.VideoCapture(0)
-#fr = cv2.VideoCapture("http://192.168.1.100:4747/video")
+#fr = cv2.VideoCapture("http://192.168.1.4:4747/video")
 fr.set(3, frameWidth)
 fr.set(4, frameHeight)
 fr.set(10, 150)
@@ -41,17 +41,17 @@ while True:
 
     black_img, xloc, yloc = hu.loc(black_img, landmarks, hindex, lindex, hand_ids, draw=True)
     if xloc != -1:
-        data = str(xloc) + ',' + str(yloc) + '\n'  # Add newline so Arduino knows when to stop reading
+        data = str(xloc) + '\n'  # Add newline so Arduino knows when to stop reading
         print("hand:", hindex, f" landmark: {lindex}, at: ({xloc}, {yloc})")
         xprev = xloc
         yprev = yloc
     else:
-        data = str(xprev) + ',' + str(yprev) + '\n'
+        data = str(xprev) + '\n'
         print("hand:", hindex, f" landmark: {lindex}, at: ({xprev}, {yprev})")
 
     arduino.write(data.encode())  # Convert string to bytes
     print("Sent")
-    time.sleep(0.2)  # Optional: slow down for testing
+    #time.sleep(0.2)  # Optional: slow down for testing
 
     black_img = hu.draw_hands(black_img, landmarks, hand_ids)
     img = hu.draw_hands(img, landmarks, hand_ids)

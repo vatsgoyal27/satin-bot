@@ -52,3 +52,34 @@ This project uses Python and Arduino to track a hand landmark using MediaPipe, s
 1. Download the mobile DroidCam app from the play store
 2. Start DroidCam and connect both your laptop and phone to the same Wi-Fi
 3. Comment line *16*, uncomment *line 17* in *serialCom.py* and replace the url with your DroidCam url
+
+### Notes
+1. Do not use nRF with the PA/LNA Antenna connected (if powered by onboard 3.3v)
+2. cant open serial port of transmitter as it is being used by pyserial
+
+### 🔌 nRF24L01+ Wiring Guide
+
+Connect the nRF24L01+ module to your Arduino Uno or Nano as follows:
+
+- **VCC** → 3.3 V  
+ *Do NOT connect to 5 V — it can permanently damage the module!*
+  
+- **GND** → GND
+
+- **CE** → Pin 9
+
+- **CSN (CS)** → Pin 10
+
+- **SCK** → Pin 13
+
+- **MOSI** → Pin 11
+
+- **MISO** → Pin 12
+
+- **IRQ** → Not connected (optional)
+
+#### ⚠️ Power Tip
+
+If you're using the nRF24L01+ with a built-in antenna amplifier (PA+LNA module), add a **10 μF capacitor** between **VCC and GND**, placed close to the module. This helps prevent instability due to voltage dips.
+
+Some Arduino boards can't provide enough current on the 3.3 V pin for PA+LNA modules — consider using an external 3.3 V voltage regulator like the **AMS1117** if needed.
