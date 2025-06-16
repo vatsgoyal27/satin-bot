@@ -6,7 +6,7 @@ import hand_utils as hu
 import time
 
 #Change 'COM3' to match your Arduino's port
-arduino = serial.Serial(port='COM12', baudrate=9600, timeout=1)
+arduino = serial.Serial(port='COM13', baudrate=9600, timeout=1)
 time.sleep(2)  # Let Arduino reset
 
 pTime = 0
@@ -14,7 +14,7 @@ pTime = 0
 frameHeight = 480
 frameWidth = 640
 fr = cv2.VideoCapture(0)
-#fr = cv2.VideoCapture("http://192.168.1.4:4747/video")
+#fr = cv2.VideoCapture("http://192.168.1.100:4747/video")
 fr.set(3, frameWidth)
 fr.set(4, frameHeight)
 fr.set(10, 150)
