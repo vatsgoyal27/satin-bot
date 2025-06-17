@@ -1,10 +1,10 @@
-# 🤖 Hand Tracking with Wireless nRF24L01 Communication and Motor Control
+# (INCOMPLETE) Hand Tracking with Wireless nRF24L01 Communication and Motor Control
 
 This project uses Python and Arduino to track a hand landmark using MediaPipe, send the coordinates via serial to an Arduino transmitter, which then wirelessly transmits the coordinates over nRF24L01 radio modules to a receiver Arduino. The receiver Arduino uses that data to control DC motors and effectively follow the landmark.
 
 ---
 
-## 📦 Project Components
+##  Project Components
 
 - **Python script** – Hand tracking and serial communication
 - **Arduino transmitter** – Reads serial data, sends via nRF24L01
@@ -13,7 +13,7 @@ This project uses Python and Arduino to track a hand landmark using MediaPipe, s
 
 ---
 
-## 🛠️ Requirements
+##  Requirements
 
 ### Python
 
@@ -35,7 +35,7 @@ pip install opencv-python mediapipe numpy pyserial
 
 ---
 
-## 🚀 Setup Instructions
+## Setup Instructions
 
 ### Python Script
 
@@ -60,7 +60,7 @@ pip install opencv-python mediapipe numpy pyserial
 
 ---
 
-## ⚙️ Notes
+## Notes
 
 - **Do NOT use the nRF24L01+ PA/LNA version directly on Arduino 3.3 V.** It may cause instability or permanent damage. Use an external 3.3 V regulator like **AMS1117** with capacitors.
 - PySerial will lock the serial port — the Arduino IDE cannot access it at the same time.
@@ -68,9 +68,9 @@ pip install opencv-python mediapipe numpy pyserial
 
 ---
 
-## 🔌 Wiring Guide
+## Wiring Guide
 
-### 🅰️ Transmitter Arduino (with nRF24L01+)
+###  Transmitter Arduino (with nRF24L01+)
 
 | nRF24L01+ Pin | Arduino Pin         |
 |---------------|---------------------|
@@ -83,11 +83,11 @@ pip install opencv-python mediapipe numpy pyserial
 | MISO          | D12 (SPI)           |
 | IRQ           | Not connected       |
 
-> 📡 For PA/LNA versions, use a 10 μF capacitor across VCC and GND near the module.
+> For PA/LNA versions, use a 10 μF capacitor across VCC and GND near the module.
 
 ---
 
-### 🅱️ Receiver Arduino with Motor Control
+### Receiver Arduino with Motor Control
 
 #### nRF24L01+ Module
 
@@ -112,11 +112,11 @@ pip install opencv-python mediapipe numpy pyserial
 | IN4      | D7          | Motor B direction   |
 | ENB      | D5 (PWM)    | Motor B speed (PWM) |
 
-> 🧩 Remove the jumpers on ENA and ENB to allow PWM control from the Arduino.
+> Remove the jumpers on ENA and ENB to allow PWM control from the Arduino.
 
 ---
 
-### 🔋 Power Setup
+### Power Setup
 
 | Source               | Destination         | Notes                                |
 |----------------------|---------------------|--------------------------------------|
@@ -125,11 +125,11 @@ pip install opencv-python mediapipe numpy pyserial
 | L298N `5V`           | Arduino `5V`        | Powers Arduino (leave 5V enable jumper ON) |
 | L298N `GND`          | Arduino `GND`       | Required for common ground           |
 
-> ⚠️ Do **not** connect USB + 5 V from L298N to Arduino at the same time.
+> Do **not** connect USB + 5 V from L298N to Arduino at the same time.
 
 ---
 
-### 🧪 DC Motor Wiring
+### DC Motor Wiring
 
 | L298N Pin | Connect To     |
 |-----------|----------------|
@@ -142,7 +142,7 @@ pip install opencv-python mediapipe numpy pyserial
 
 ---
 
-### ⚙️ L298N Jumper Configuration
+### L298N Jumper Configuration
 
 | Jumper     | State     | Purpose                              |
 |------------|-----------|--------------------------------------|
@@ -152,12 +152,10 @@ pip install opencv-python mediapipe numpy pyserial
 
 ---
 
-## ✅ Summary
+## Summary
 
 - MediaPipe tracks hand → sends landmark coordinates over Serial
 - Arduino transmitter reads serial → sends data via nRF24L01+
 - Arduino receiver gets data → controls motor direction + speed with PWM
 
 ---
-
-🧠✋📡🛠️ Happy Hacking!
