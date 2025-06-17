@@ -5,16 +5,16 @@
 RF24 radio(9, 10);  // CE, CSN
 const byte address[6] = "00001";
 
-// Define a struct to hold x and ln
+// Structure to hold just one int: x
 struct DataPacket {
   int x;
-  int ln;
 };
 
 void setup() {
   Serial.begin(9600);
+
   if (!radio.begin()) {
-    while (1);  // Halt if nRF24 fails
+    while (1);  // Stop if radio doesn't initialize
   }
 
   radio.setPALevel(RF24_PA_LOW);
@@ -26,15 +26,14 @@ void setup() {
 void loop() {
   if (Serial.available()) {
     String input = Serial.readStringUntil('\n');
-    input.trim();  // remove newline or whitespace
+    input.trim();  // remove whitespace/newlines
 
-    int commaIndex = input.indexOf(',');
-    if (commaIndex != -1) {
+    if (input.length() > 0) {
       DataPacket data;
-      data.x = input.substring(0, commaIndex).toInt();
-      data.ln = input.substring(commaIndex + 1).toInt();
+      data.x = input.toInt();  // convert string to int
 
       radio.write(&data, sizeof(data));
+      // Serial.println("Sent: " + String(data.x));  // Optional
     }
   }
 }
