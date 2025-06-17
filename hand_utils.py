@@ -64,52 +64,40 @@ def detect_hands(imgpar, hands_module, width, height):
 
     return all_landmark_positions, hand_labels
 
-def between_points(imagep, all_landmarks, hand_labels,
-                   landmark1_idx=4, landmark2_idx=4,
-                   color=(0, 0, 255), thickness=2, drawit = True):
+import cv2
+import math
+
+def between_points(imagep, hand_landmarks,
+                   landmark1_idx=4, landmark2_idx=8,
+                   color=(0, 0, 255), thickness=2, drawit=True):
     """
-    Draws a line between two specific landmarks on two different hands.
+    Draws a line between two specific landmarks on a single hand.
 
     Args:
         imagep: Image to draw on.
-        all_landmarks: List of hands, each with 21 (x, y) landmark tuples.
-        hand_labels: List of hands tagged with Left and Right
-            This list matches the order of all_landmarks, so:
-                all_landmarks[0] corresponds to hand_labels[0] (left or right)
-                all_landmarks[1] corresponds to hand_labels[1] (left or right)
-            Hence, we can use this to identify left and right hands.
-        landmark1_idx: Landmark index in the first hand.
-        landmark2_idx: Landmark index in the second hand.
+        hand_landmarks: List of (x, y) tuples representing 21 landmarks of a single hand.
+        landmark1_idx: Index of the first landmark.
+        landmark2_idx: Index of the second landmark.
         color: BGR color of the line.
         thickness: Thickness of the line.
+        drawit: Whether to draw the line on the image.
 
     Returns:
-        Modified image with the line drawn (if valid hands and landmarks are found).
-        Distance between given points.
+        Modified image with the line drawn (if valid).
+        Euclidean distance between the two landmarks.
     """
     d = None
-    left_index = right_index = None
 
-    # Find indices for Left and Right hands
-    for idx, label in enumerate(hand_labels):
-        if label == "Left":
-            left_index = idx
-        elif label == "Right":
-            right_index = idx
-
-    # Proceed if both hands are found
-    if left_index is not None and right_index is not None:
-        if left_index < len(all_landmarks) and right_index < len(all_landmarks):
-            left_hand = all_landmarks[left_index]
-            right_hand = all_landmarks[right_index]
-            if landmark1_idx < len(left_hand) and landmark2_idx < len(right_hand):
-                pt1 = left_hand[landmark1_idx]
-                pt2 = right_hand[landmark2_idx]
-                if drawit:
-                    cv2.line(imagep, pt1, pt2, color, thickness)
-                d = math.hypot(pt2[0] - pt1[0], pt2[1] - pt1[1])
+    # Ensure both landmarks exist
+    if (landmark1_idx < len(hand_landmarks[0])) and (landmark2_idx < len(hand_landmarks[0])):
+        pt1 = hand_landmarks[0][landmark1_idx]
+        pt2 = hand_landmarks[0][landmark2_idx]
+        if drawit:
+            cv2.line(imagep, pt1, pt2, color, thickness)
+        d = math.hypot(pt2[0] - pt1[0], pt2[1] - pt1[1])
 
     return imagep, d
+
 
 def fpscalc(prev_time):
     """
@@ -119,12 +107,12 @@ def fpscalc(prev_time):
     fpspar = 1 / (curr_time - prev_time) if (curr_time - prev_time) > 0 else 0
     return curr_time, fpspar
 
-def draw_text(image, textpar):
+def draw_text(image, textpar, x, y):
     """
     Draws given value on the image.
     """
     if textpar is not None:
-        cv2.putText(image, f"{int(textpar)}", (10, 30), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2)
+        cv2.putText(image, textpar, (x, y), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2)
     return image
 
 def draw_hands(image, all_landmarks, hand_labels = None, color=(0, 255, 0), radius=5, thickness=2):
