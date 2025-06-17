@@ -1,85 +1,163 @@
-# (INCOMPLETE) Hand Tracking with Wireless nRF24L01 Communication and Motor Control
+# 🤖 Hand Tracking with Wireless nRF24L01 Communication and Motor Control
 
-This project uses Python and Arduino to track a hand landmark using MediaPipe, send the coordinates via serial to an Arduino transmitter, which then wirelessly transmits the coordinates over nRF24L01 radio modules to a receiver Arduino. The receiver Arduino uses that data to control dc motors and effectively follow the landmark
-
----
-
-## Project Components
-
-- **Python script** (hand tracking and serial communication)
-- **Arduino transmitter** (reads serial data, sends via nRF24L01)
-- **Arduino receiver** (receives wireless data, controls the dc motors)
-- **Hardware:** Webcam, two Arduino boards, two nRF24L01+ radio modules, *To be updated*
+This project uses Python and Arduino to track a hand landmark using MediaPipe, send the coordinates via serial to an Arduino transmitter, which then wirelessly transmits the coordinates over nRF24L01 radio modules to a receiver Arduino. The receiver Arduino uses that data to control DC motors and effectively follow the landmark.
 
 ---
 
-## Requirements
+## 📦 Project Components
+
+- **Python script** – Hand tracking and serial communication
+- **Arduino transmitter** – Reads serial data, sends via nRF24L01
+- **Arduino receiver** – Receives wireless data, controls DC motors
+- **Hardware:** Webcam, 2× Arduino boards, 2× nRF24L01+ modules, L298N motor driver, 2× DC motors, Battery
+
+---
+
+## 🛠️ Requirements
 
 ### Python
 
-- Python 3.9.13 (mediapipe is not supported by python 3.13 or 3.11)
-- OpenCV (`opencv-python`)
-- MediaPipe (`mediapipe`)
-- NumPy (`numpy`)
-- PySerial (`pyserial`)
+- Python 3.9.13 (MediaPipe is not supported on 3.11 or 3.13)
+- `opencv-python`
+- `mediapipe`
+- `numpy`
+- `pyserial`
+
+```bash
+pip install opencv-python mediapipe numpy pyserial
+```
 
 ### Arduino
 
 - Arduino IDE
-- RF24 library for nRF24L01 communication ([GitHub: TMRh20/RF24](https://github.com/nRF24/RF24))
-
-### DroidCam
-
-- DroidCam android app
+- RF24 library by TMRh20  
+  → [GitHub: nRF24/RF24](https://github.com/nRF24/RF24)
 
 ---
 
-## Setup
+## 🚀 Setup Instructions
 
-### Python
+### Python Script
 
-1. Clone this repo or copy the Python script files.
-2. Install required libraries and dependencies
+1. Clone or copy the Python files.
+2. Install required libraries using `pip install` above.
+3. Update the serial port in the Python script to match your Arduino (e.g. `'COM11'` or `'/dev/ttyUSB0'`).
 
 ### Arduino
 
-1. Copy each .ino file into separate files on the Arduino IDE or equivalent
-2. Install required libraries
-3. Upload to each arduino and assemble 'satin'
+1. Open and upload the transmitter and receiver `.ino` files to their respective boards.
+2. Ensure the `RF24` library is installed.
+3. Power the receiver Arduino from the 5 V output of the L298N motor driver (see wiring below).
 
-### DroidCam
+### DroidCam (Optional)
 
-1. Download the mobile DroidCam app from the play store
-2. Start DroidCam and connect both your laptop and phone to the same Wi-Fi
-3. Comment line *16*, uncomment *line 17* in *serialCom.py* and replace the url with your DroidCam url
+1. Install DroidCam on your phone.
+2. Connect phone and laptop to the same Wi-Fi network.
+3. In the Python script:
+   - Comment out the webcam line.
+   - Uncomment the DroidCam line.
+   - Replace the IP with your DroidCam address.
 
-### Notes
-1. Do not use nRF with the PA/LNA Antenna connected (if powered by onboard 3.3v)
-2. cant open serial port of transmitter as it is being used by pyserial
+---
 
-### 🔌 nRF24L01+ Wiring Guide
+## ⚙️ Notes
 
-Connect the nRF24L01+ module to your Arduino Uno or Nano as follows:
+- **Do NOT use the nRF24L01+ PA/LNA version directly on Arduino 3.3 V.** It may cause instability or permanent damage. Use an external 3.3 V regulator like **AMS1117** with capacitors.
+- PySerial will lock the serial port — the Arduino IDE cannot access it at the same time.
+- If you're powering the Arduino using the 5 V output of the L298N, do not connect the USB cable at the same time.
 
-- **VCC** → 3.3 V  
- *Do NOT connect to 5 V — it can permanently damage the module!*
-  
-- **GND** → GND
+---
 
-- **CE** → Pin 9
+## 🔌 Wiring Guide
 
-- **CSN (CS)** → Pin 10
+### 🅰️ Transmitter Arduino (with nRF24L01+)
 
-- **SCK** → Pin 13
+| nRF24L01+ Pin | Arduino Pin         |
+|---------------|---------------------|
+| VCC           | 3.3 V (NOT 5 V)      |
+| GND           | GND                 |
+| CE            | D9                  |
+| CSN (CS)      | D10                 |
+| SCK           | D13 (SPI)           |
+| MOSI          | D11 (SPI)           |
+| MISO          | D12 (SPI)           |
+| IRQ           | Not connected       |
 
-- **MOSI** → Pin 11
+> 📡 For PA/LNA versions, use a 10 μF capacitor across VCC and GND near the module.
 
-- **MISO** → Pin 12
+---
 
-- **IRQ** → Not connected (optional)
+### 🅱️ Receiver Arduino with Motor Control
 
-#### ⚠️ Power Tip
+#### nRF24L01+ Module
 
-If you're using the nRF24L01+ with a built-in antenna amplifier (PA+LNA module), add a **10 μF capacitor** between **VCC and GND**, placed close to the module. This helps prevent instability due to voltage dips.
+| nRF24L01+ Pin | Arduino Pin         |
+|---------------|---------------------|
+| VCC           | 3.3 V (regulated)   |
+| GND           | GND                 |
+| CE            | D9                  |
+| CSN (CS)      | D10                 |
+| SCK           | D13                 |
+| MOSI          | D11                 |
+| MISO          | D12                 |
 
-Some Arduino boards can't provide enough current on the 3.3 V pin for PA+LNA modules — consider using an external 3.3 V voltage regulator like the **AMS1117** if needed.
+#### L298N Motor Driver to Arduino
+
+| L298N Pin | Arduino Pin | Description         |
+|----------|-------------|---------------------|
+| IN1      | D2          | Motor A direction   |
+| IN2      | D3          | Motor A direction   |
+| ENA      | D6 (PWM)    | Motor A speed (PWM) |
+| IN3      | D4          | Motor B direction   |
+| IN4      | D7          | Motor B direction   |
+| ENB      | D5 (PWM)    | Motor B speed (PWM) |
+
+> 🧩 Remove the jumpers on ENA and ENB to allow PWM control from the Arduino.
+
+---
+
+### 🔋 Power Setup
+
+| Source               | Destination         | Notes                                |
+|----------------------|---------------------|--------------------------------------|
+| Battery + (7–12 V)    | L298N `12V`         | Main motor power                     |
+| Battery –            | L298N `GND`         | Shared ground                        |
+| L298N `5V`           | Arduino `5V`        | Powers Arduino (leave 5V enable jumper ON) |
+| L298N `GND`          | Arduino `GND`       | Required for common ground           |
+
+> ⚠️ Do **not** connect USB + 5 V from L298N to Arduino at the same time.
+
+---
+
+### 🧪 DC Motor Wiring
+
+| L298N Pin | Connect To     |
+|-----------|----------------|
+| OUT1      | Left Motor +   |
+| OUT2      | Left Motor –   |
+| OUT3      | Right Motor +  |
+| OUT4      | Right Motor –  |
+
+> Reverse wires if motors spin in the wrong direction.
+
+---
+
+### ⚙️ L298N Jumper Configuration
+
+| Jumper     | State     | Purpose                              |
+|------------|-----------|--------------------------------------|
+| 5V Enable  | ✅ ON      | Activates 5 V regulator              |
+| ENA        | ❌ REMOVED | Allows PWM from Arduino D6           |
+| ENB        | ❌ REMOVED | Allows PWM from Arduino D5           |
+
+---
+
+## ✅ Summary
+
+- MediaPipe tracks hand → sends landmark coordinates over Serial
+- Arduino transmitter reads serial → sends data via nRF24L01+
+- Arduino receiver gets data → controls motor direction + speed with PWM
+
+---
+
+🧠✋📡🛠️ Happy Hacking!
