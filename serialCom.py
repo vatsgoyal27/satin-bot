@@ -49,7 +49,7 @@ while True:
         data = f"{xprev}"
         print(f"Sent to Arduino: {data.strip()} (xprev={xprev})")
 
-    arduino.write(data.encode())
+    arduino.write((data + "\n").encode())  # data is a string like "350"
     print("Sent")  # Optional: keep if needed for debugging
     time.sleep(0.2)
 
