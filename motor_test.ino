@@ -70,7 +70,7 @@ void left() {
 
 // Stop both motors
 void stopMotors() {
-  Serial.println("Motors STOPPED");
+  Serial.println("Motors STOPPED!!");
   analogWrite(ENA, 0);
   analogWrite(ENB, 0);
 }

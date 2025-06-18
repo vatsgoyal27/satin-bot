@@ -103,5 +103,5 @@ void loop() {
     }
   }
 
-  delay(50);  // Adjust as needed for smoother control
+  delay(50);
 }

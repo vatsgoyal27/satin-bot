@@ -33,7 +33,6 @@ void loop() {
       data.x = input.toInt();  // convert string to int
 
       radio.write(&data, sizeof(data));
-      // Serial.println("Sent: " + String(data.x));  // Optional
     }
   }
 }

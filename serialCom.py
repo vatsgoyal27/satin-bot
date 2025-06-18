@@ -5,7 +5,7 @@ import mediapipe as mp
 import hand_utils as hu
 import time
 
-# Change 'COM11' to match your Arduino's port
+# Change 'COM11' to match your Arduino port
 arduino = serial.Serial(port='COM11', baudrate=9600, timeout=1)
 time.sleep(2)  # Let Arduino reset
 

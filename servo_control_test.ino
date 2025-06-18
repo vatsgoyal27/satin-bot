@@ -21,7 +21,7 @@ void loop() {
       int angle = map(x, 0, 640, 0, 180);     // Map x to servo angle
 
       if (ln > 30) {
-        myServo.write(angle);                // Move servo only if hand is close enough
+        myServo.write(angle);
       }
     }
   }

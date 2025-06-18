@@ -5,7 +5,7 @@ This project uses Python and Arduino to track a hand landmark using MediaPipe, s
 ---
 
 ##  Project Components
-
+ 
 - **Python script** – Hand tracking and serial communication
 - **Arduino transmitter** – Reads serial data, sends via nRF24L01
 - **Arduino receiver** – Receives wireless data, controls DC motors
@@ -157,5 +157,13 @@ pip install opencv-python mediapipe numpy pyserial
 - MediaPipe tracks hand → sends landmark coordinates over Serial
 - Arduino transmitter reads serial → sends data via nRF24L01+
 - Arduino receiver gets data → controls motor direction + speed with PWM
+
+---
+
+## 📽️ Demo
+
+Watch the demo video showing the full project in action:
+
+[▶️ Click to watch demo video](demo.mp4)
 
 ---

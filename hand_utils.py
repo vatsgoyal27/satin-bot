@@ -2,7 +2,6 @@ import cv2
 import numpy as np
 import time
 import math
-#end of imports
 
 def stackImages(scale,imgArray):
     # stacks images, automatically resizing to match dimensions and supports grayscale and color
