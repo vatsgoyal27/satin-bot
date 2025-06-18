@@ -1,4 +1,4 @@
-# (INCOMPLETE) Hand Tracking with Wireless nRF24L01 Communication and Motor Control
+# Hand Tracking with Wireless nRF24L01 Communication and Motor Control
 
 This project uses Python and Arduino to track a hand landmark using MediaPipe, send the coordinates via serial to an Arduino transmitter, which then wirelessly transmits the coordinates over nRF24L01 radio modules to a receiver Arduino. The receiver Arduino uses that data to control DC motors and effectively follow the landmark.
 

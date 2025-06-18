@@ -26,8 +26,6 @@ handConnections = mpHands.HAND_CONNECTIONS
 
 hindex = "Right"
 lindex = 8
-xprev = 0
-yprev = 0
 
 while True:
     success, img = fr.read()
@@ -43,11 +41,9 @@ while True:
     if xloc != -1:
         data = f"{xloc}"
         print(f"Sent to Arduino: {data.strip()} (xloc={xloc})")
-        xprev = xloc
-        yprev = yloc
     else:
-        data = f"{xprev}"
-        print(f"Sent to Arduino: {data.strip()} (xprev={xprev})")
+        data = f"{0}"
+        print(f"Sent to Arduino: {data.strip()} (xprev={0})")
 
     arduino.write((data + "\n").encode())  # data is a string like "350"
     print("Sent")  # Optional: keep if needed for debugging

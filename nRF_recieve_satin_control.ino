@@ -72,6 +72,14 @@ void right() {
   analogWrite(ENA, 0);
   analogWrite(ENB, speedB);
 }
+void stop(){
+  digitalWrite(IN1, LOW);
+  digitalWrite(IN2, LOW);
+  digitalWrite(IN3, LOW);
+  digitalWrite(IN4, LOW);
+  analogWrite(ENA, 0);
+  analogWrite(ENB, 0);
+}
 
 void stopMotors() {
   analogWrite(ENA, 0);
@@ -84,15 +92,16 @@ void loop() {
     int x = receivedData.x;
 
     // Movement decisions based on x value
-    if (x < 213) {
+    if (x <= 213 && x > 0) {
       left();
-    } else if (x > 426) {
+    } else if (x >= 426) {
       right();
-    } else {
+    } else if (x < 426 && x > 213){
       forward();
+    } else {
+      stop();
     }
   }
 
   delay(50);  // Adjust as needed for smoother control
 }
-
